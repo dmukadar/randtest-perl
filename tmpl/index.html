@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>Perl Test: Upload Log</title>
+
+		<meta name="description" content="overview &amp; stats" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+		<base href="/radtest-assets/"></base>
+		<!-- bootstrap & fontawesome -->
+		<link rel="stylesheet" href="css/bootstrap.min.css" />
+		<link rel="stylesheet" href="font-awesome/4.2.0/css/font-awesome.min.css" />
+
+		<!-- page specific plugin styles -->
+
+		<!-- text fonts -->
+		<link rel="stylesheet" href="fonts/fonts.googleapis.com.css" />
+
+		<!-- ace styles -->
+		<link rel="stylesheet" href="css/ace.min.css" class="ace-main-stylesheet" id="main-ace-style" />
+
+		<!--[if lte IE 9]>
+			<link rel="stylesheet" href="css/ace-part2.min.css" class="ace-main-stylesheet" />
+		<![endif]-->
+
+		<!--[if lte IE 9]>
+		  <link rel="stylesheet" href="css/ace-ie.min.css" />
+		<![endif]-->
+
+		<!-- inline styles related to this page -->
+
+		<!-- ace settings handler -->
+		<script src="js/ace-extra.min.js"></script>
+
+		<!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
+
+		<!--[if lte IE 8]>
+		<script src="js/html5shiv.min.js"></script>
+		<script src="js/respond.min.js"></script>
+		<![endif]-->
+	</head>
+
+	<body class="no-skin">
+		<div id="navbar" class="navbar navbar-default">
+			<script type="text/javascript">
+				try{ace.settings.check('navbar' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="navbar-container" id="navbar-container">
+				<button type="button" class="navbar-toggle menu-toggler pull-left" id="menu-toggler" data-target="#sidebar">
+					<span class="sr-only">Toggle sidebar</span>
+
+					<span class="icon-bar"></span>
+
+					<span class="icon-bar"></span>
+
+					<span class="icon-bar"></span>
+				</button>
+
+				<div class="navbar-header pull-left">
+					<a href="<TMPL_VAR name=base_url>/index.cgi" class="navbar-brand">
+						<small>
+							<i class="fa fa-leaf"></i>
+							Radius Accounting
+						</small>
+					</a>
+				</div>
+			</div><!-- /.navbar-container -->
+		</div>
+
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div id="sidebar" class="sidebar                  responsive">
+				<script type="text/javascript">
+					try{ace.settings.check('sidebar' , 'fixed')}catch(e){}
+				</script>
+
+				<ul class="nav nav-list">
+					<li class="active">
+						<a href="<TMPL_VAR name=base_url>/index.cgi">
+							<i class="menu-icon fa fa-pencil-square-o"></i>
+							<span class="menu-text"> 01. Upload Log </span>
+						</a>
+
+						<b class="arrow"></b>
+					</li>
+
+					<li class="">
+						<a href="<TMPL_VAR name=base_url>/process.cgi">
+							<i class="menu-icon fa fa-tachometer"></i>
+							<span class="menu-text"> 02. Process File </span>
+						</a>
+
+						<b class="arrow"></b>
+					</li>
+
+					<li class="">
+						<a href="<TMPL_VAR name=base_url>/result.cgi">
+							<i class="menu-icon fa fa-desktop"></i>
+							<span class="menu-text"> 03. Display Result </span>
+						</a>
+
+						<b class="arrow"></b>
+					</li>
+
+				</ul><!-- /.nav-list -->
+
+			</div>
+
+			<div class="main-content">
+				<div class="main-content-inner">
+					<div class="breadcrumbs" id="breadcrumbs">
+						<script type="text/javascript">
+							try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+						</script>
+
+						<ul class="breadcrumb">
+							<li>
+								<i class="ace-icon fa fa-home home-icon"></i>
+								<a href="#" class="disabled">Home</a>
+							</li>
+							<li class="active">01. Upload Log</li>
+						</ul><!-- /.breadcrumb -->
+					</div>
+
+					<div class="page-content">
+						<div class="page-header">
+							<h1>
+								File Log
+								<small>
+									<i class="ace-icon fa fa-angle-double-right"></i>
+									Upload
+								</small>
+							</h1>
+						</div><!-- /.page-header -->
+
+						<div class="row">
+							<div class="col-xs-12">
+								<!-- PAGE CONTENT BEGINS -->
+								<TMPL_IF NAME=error_message>
+								<div class="alert alert-block alert-success">
+									<button type="button" class="close" data-dismiss="alert">
+										<i class="ace-icon fa fa-times"></i>
+									</button>
+
+									<strong class="green">Error: </strong> <TMPL_VAR NAME=error_message>
+								</div>
+								</TMPL_IF>
+
+								<div class="row">
+									<div class="space-6"></div>
+
+									<div class="col-sm-5">
+										<div class="widget-box">
+											<div class="widget-header widget-header-flat widget-header-small">
+												<h5 class="widget-title">
+													<i class="ace-icon fa fa-file"></i>
+													Upload Form
+												</h5>
+											</div>
+
+											<div class="widget-body">
+												<div class="widget-main">
+													<div id="form-placeholder">
+														<form method="post" enctype="multipart/form-data">
+														<div class="form-group">
+															<div class="col-xs-12">
+																<input type="file" id="filelog" name="logfile" />
+																<span class="help-block">Select file to process from your computer</span>
+															</div>
+														</div>
+														<button style="display: none;">Save</button>
+														</form>
+													</div>
+
+													<div class="clearfix">
+														
+													</div>
+												</div><!-- /.widget-main -->
+											</div><!-- /.widget-body -->
+										</div><!-- /.widget-box -->
+									</div><!-- /.col -->
+
+								</div><!-- /.row -->
+
+								<!-- PAGE CONTENT ENDS -->
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div>
+			</div><!-- /.main-content -->
+
+			<div class="footer">
+				<div class="footer-inner">
+					<div class="footer-content">
+						<span class="bigger-120">
+							<span class="blue bolder">Perl Test</span> &copy; 2016
+						</span>
+					</div>
+				</div>
+			</div>
+
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
+			</a>
+		</div><!-- /.main-container -->
+
+		<!-- basic scripts -->
+
+		<!--[if !IE]> -->
+		<script src="js/jquery.2.1.1.min.js"></script>
+
+		<!-- <![endif]-->
+
+		<!--[if IE]>
+<script src="js/jquery.1.11.1.min.js"></script>
+<![endif]-->
+
+		<!--[if !IE]> -->
+		<script type="text/javascript">
+			window.jQuery || document.write("<script src='js/jquery.min.js'>"+"<"+"/script>");
+		</script>
+
+		<!-- <![endif]-->
+
+		<!--[if IE]>
+<script type="text/javascript">
+ window.jQuery || document.write("<script src='js/jquery1x.min.js'>"+"<"+"/script>");
+</script>
+<![endif]-->
+		<script src="js/bootstrap.min.js"></script>
+
+		<!-- page specific plugin scripts -->
+
+		<!--[if lte IE 8]>
+		  <script src="js/excanvas.min.js"></script>
+		<![endif]-->
+		<script src="js/jquery-ui.custom.min.js"></script>
+
+		<!-- ace scripts -->
+		<script src="js/ace-elements.min.js"></script>
+		<script src="js/ace.min.js"></script>
+
+		<!-- inline scripts related to this page -->
+		<script type="text/javascript">
+			jQuery(function($) {
+				$("a.disabled").click(function(ev) {
+					ev.preventDefault();
+				})
+				$('#filelog').ace_file_input({
+					no_file:'No File ...',
+					btn_choose:'Choose',
+					btn_change:'Change',
+					droppable:false,
+					onchange:null,
+					thumbnail:false, //| true | large
+					whitelist:'txt'
+					//blacklist:'exe|php'
+					//onchange:''
+					//
+				});
+				$("#filelog").change(function() {
+					$("form").submit();
+				})
+			})
+		</script>
+	</body>
+</html>
