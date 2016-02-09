@@ -100,11 +100,11 @@ if (-f "$uploadDir/spool.txt") {
 }
 
 %stat = (
-    'filesize'   => $filesize,
+    'filesize'   => sprintf('%.3f', $filesize / 1024),
     'current'    => $charCount,
-    'line-read'  => $lineCount,
-    'record-read'=> $recordCount,
-    'call-read'  => (scalar keys %calls)
+    'line_read'  => $lineCount,
+    'record_read'=> $recordCount,
+    'call_read'  => (scalar keys %calls)
 );
 
 print "Content-Type: application/json\r\n\r\n";

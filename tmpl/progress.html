@@ -164,7 +164,7 @@
 											</div>
 
 											<div class="infobox-data">
-												<span class="infobox-data-number">237.5</span>
+												<span class="infobox-data-number" id="info-filesize">237.5</span>
 												<div class="infobox-content">size (Kb)</div>
 											</div>
 										</div>
@@ -175,7 +175,7 @@
 											</div>
 
 											<div class="infobox-data">
-												<span class="infobox-data-number">11</span>
+												<span class="infobox-data-number" id="info-line-read">11</span>
 												<div class="infobox-content">number of lines</div>
 											</div>
 										</div>
@@ -186,7 +186,7 @@
 											</div>
 
 											<div class="infobox-data">
-												<span class="infobox-data-number">8</span>
+												<span class="infobox-data-number" id="info-rec-read">8</span>
 												<div class="infobox-content">number of records</div>
 											</div>
 										</div>
@@ -197,7 +197,7 @@
 											</div>
 
 											<div class="infobox-data">
-												<span class="infobox-data-number">3</span>
+												<span class="infobox-data-number" id="info-call-read">3</span>
 												<div class="infobox-content">number of call</div>
 											</div>
 										</div>
@@ -208,7 +208,7 @@
 											</div>											
 
 											<div class="infobox-data">
-												<span class="infobox-data-number">6,251</span>
+												<span class="infobox-data-number" id="info-time">0</span>
 												<div class="infobox-content">time elapsed (minutes)</div>
 											</div>
 										</div>
@@ -231,7 +231,7 @@
 												<div class="widget-main">
 													<div id="progress-bar-placeholder">
 														<div class="progress">
-															<div style="width:65%" class="progress-bar"></div>
+															<div style="width:0%" class="progress-bar"></div>
 														</div>
 													</div>
 
@@ -241,9 +241,11 @@
 														<div class="grid9">
 															<span class="grey">
 																<i class="ace-icon fa fa-fighter-jet fa-2x blue"></i>
-																&nbsp; %
+																&nbsp;<span id="progress-label"> 0</span>
 															</span>
-															<h4 class="bigger pull-right" id="progress-label">65</h4>
+															<h4 class="bigger pull-right" id="next-button" style="display:none;">
+																<a href="<TMPL_VAR name=base_url>/result.cgi">View Results</a>
+															</h4>
 														</div>
 													</div>
 												</div><!-- /.widget-main -->
@@ -314,10 +316,80 @@
 		<!-- inline scripts related to this page -->
 		<script type="text/javascript">
 			jQuery(function($) {
+				var processUrl = "<TMPL_VAR name=base_url>/ajax-process.cgi";
+
+				var progressBar = {
+					timerId: null,
+					percentage: 0,
+					secondCount: 0,
+					animating: false,
+					init: function() {
+						var self = this;
+						self.percentage = 0;
+						$("#progress-label").empty().append(self.percentage);
+						$("#progress-bar-placeholder .progress-bar").attr("style", "width: " + self.percentage + "%");
+
+						$("#info-filesize").empty();
+						$("#info-line-read").empty();
+						$("#info-rec-read").empty();
+						$("#info-call-read").empty();
+						$("#info-time").empty().append(0);
+
+						self.timerId = window.setInterval(function() {
+							self.secondCount++;
+							$("#info-time").empty().append(self.secondCount);
+						}, 1000);
+						self.animating = true;
+					},
+					randStat: function() {
+						var self = this;
+
+						if ($("#progress-label").html() != "100%") {
+							if (self.secondCount % 3 == 0) {
+								$("#info-filesize").empty().append('.');
+								$("#info-line-read").empty().append('.');
+								$("#info-rec-read").empty().append('.');
+								$("#info-call-read").empty().append('.');
+							} else {
+								$("#info-filesize").append('.');
+								$("#info-line-read").append('.');
+								$("#info-rec-read").append('.');
+								$("#info-call-read").append('.');
+							}
+						}
+
+						if (self.animating) {
+							window.setTimeout(function() {
+								self.randStat();
+							}, 300);
+						}
+					},
+					complete: function() {
+						var self = this;
+						self.percentage = 100;
+						$("#progress-label").empty().append(self.percentage + "%");
+						$("#progress-bar-placeholder .progress-bar").attr("style", "width: " + self.percentage + "%");
+					}
+				};
 				$("a.disabled").click(function(ev) {
 					ev.preventDefault();
 				})
+				progressBar.init();
+				progressBar.randStat();
+				$.post(processUrl, null, function(response) {
+					progressBar.animating = false;
+					window.clearInterval(progressBar.timerId);
+					if (response.filesize != undefined && response.filesize != null && response.filesize > 0) {
+						$("#next-button").fadeIn();
 
+						$("#info-filesize").empty().append(response.filesize);
+						$("#info-line-read").empty().append(response.line_read);
+						$("#info-rec-read").empty().append(response.record_read);
+						$("#info-call-read").empty().append(response.call_read);
+						
+						progressBar.complete();
+					}
+				}, 'json');
 			})
 		</script>
 	</body>
