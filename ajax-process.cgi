@@ -67,7 +67,7 @@ if (-f "$uploadDir/spool.txt") {
             $calls{$record{"Acct-Session-Id"}}++;
 
             $setupTime = convert($record{"setup-time"});
-            $connectTime = '0000-00-00 00:00:00';
+            $connectTime = convert($record{"connect-time"});
             $disconnectTime = convert($record{"disconnect-time"});
 
             # last;
