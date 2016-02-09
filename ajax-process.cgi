@@ -31,11 +31,7 @@ my $lineCount = 0;
 my $recordCount = 0;
 my $uploadDir = "$Bin/uploads";
 my $filesize = -s "$uploadDir/spool.txt";
-my %config = (
-    "dsn"      => "DBI:mysql:database=perltestdb;host=127.0.0.1;port=3306",
-    "uname"    => "tester1",
-    "password" => "1"
-);
+my %config = do 'config.pl';
 my $queries =<<'EOL';
 INSERT INTO cdr (acctSessionId, callingStationId, calledStationId, setupTime, connectTime, disconnectTime) 
 VALUES (?, ?, ?, ?, ?, ?)
