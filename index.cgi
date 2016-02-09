@@ -42,8 +42,11 @@ if ($cgi->param) {
 }
 
 my $baseUrl = $cgi->url();
-$baseUrl =~ s/\/index.cgi//;
-$template->param('base_url'=>$baseUrl);
+$baseUrl =~ s/\/\w*?\.cgi$//;
+$template->param(
+    'base_url'=>$baseUrl,
+    'asset_url'=>'/radtest-assets/',
+);
 
 if (@errorMessage) {
     $template->param(
