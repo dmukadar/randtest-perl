@@ -20,9 +20,19 @@ my $dblink = DBI->connect(
     $config{"password"},
     { RaiseError=>0, AutoCommit=>1 }
 );
-my @row = $dblink->selectrow_array("SELECT COUNT(-1) FROM cdr");
-my $rowCount = shift(@row);
+my $searchCondition;
+my $keyword = $cgi->param('query');
+my $list;
+my $queries;
+my @row;
 
+if (defined $keyword) {
+    @row = $dblink->selectrow_array("SELECT COUNT(-1) FROM cdr WHERE acctSessionId LIKE ?", {}, "%$keyword%");
+} else {
+    @row = $dblink->selectrow_array("SELECT COUNT(-1) FROM cdr");
+}
+
+my $rowCount = shift(@row);    
 $page = $cgi->param('page');
 $totalPage = ceil($rowCount / $rowLimit);
 
@@ -34,22 +44,27 @@ if (! defined $page) {
 
 $offset = ($page - 1) * $rowLimit;
 
-my $queries = <<"EOL";
-SELECT 
-    acctSessionId, callingStationId, calledStationId, setupTime, connectTime, disconnectTime
-FROM cdr
-LIMIT $offset, $rowLimit
+if (defined $keyword) {
+    $queries = <<"EOL";
+    SELECT 
+        acctSessionId, callingStationId, calledStationId, setupTime, connectTime, disconnectTime
+    FROM cdr
+    WHERE acctSessionId LIKE ?
+    LIMIT $offset, $rowLimit
 EOL
 
-my $list = $dblink->selectall_arrayref($queries, { Slice=>{} });
+    $list = $dblink->selectall_arrayref($queries, { Slice=>{} }, "%$keyword%");
+} else {
+    $queries = <<"EOL";
+    SELECT 
+        acctSessionId, callingStationId, calledStationId, setupTime, connectTime, disconnectTime
+    FROM cdr
+    LIMIT $offset, $rowLimit
+EOL
 
+    $list = $dblink->selectall_arrayref($queries, { Slice=>{} });
+}
 
-
-# print $cgi->header;
-# foreach my $record (@$list) {
-#     print $record->{setupTime}.'<br/>';
-# }
-# exit;
 
 my $baseUrl = $cgi->url();
 $baseUrl =~ s/\/\w*?\.cgi$//;
@@ -58,6 +73,7 @@ $template->param(
     'asset_url'     =>'/radtest-assets/',
     'search_results'=> $list,
     'total_page'    => $totalPage,
+    'search_query'  => $keyword,
 );
 
 if (@errorMessage) {

@@ -130,7 +130,7 @@
 						<div class="nav-search" id="nav-search">
 							<form class="form-search">
 								<span class="input-icon">
-									<input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+									<input type="text" placeholder="Search session..." class="nav-search-input" id="nav-search-input" autocomplete="off" name="query" value="<TMPL_VAR name=search_query>" />
 									<i class="ace-icon fa fa-search nav-search-icon"></i>
 								</span>
 							</form>
@@ -262,8 +262,14 @@
 				$('#pagination-container').twbsPagination({
 				  totalPages: <TMPL_VAR name=total_page>,
 				  visiblePages: 7,
-				  href: '<TMPL_VAR name=base_url>/result.cgi?page={{number}}'
+				  href: '<TMPL_VAR name=base_url>/result.cgi?page={{number}}&query=<TMPL_VAR name=search_query>'
 				});
+
+				$("#query").keypress(function(ev) {
+					if (ev.keyCode == 13) {
+						$("form").submit();
+					}
+				})
 			})
 		</script>
 	</body>
